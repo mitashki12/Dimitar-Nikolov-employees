@@ -43,13 +43,15 @@ namespace Employees
                 }
                 else {
                     employeesByProject.Add(entry.ProjectId, new List<EntryRecord>());
+                    currentList = employeesByProject.GetValueOrDefault<int, List<EntryRecord>>(entry.ProjectId);
+                    currentList.Add(entry);
                 }
                 
                 line = reader.ReadLine();
             }
 
            PairOfEmployees maximalPair = findMaximalPair(employeesByProject);
-           Console.WriteLine("{0}, {1}, {2}", maximalPair.FirstEmployeeId, maximalPair.SecondEmployeeId, maximalPair.ProjectId);
+           Console.WriteLine("{0}, {1}, {2}", maximalPair.FirstEmployeeId, maximalPair.SecondEmployeeId, maximalPair.DurationInDays);
         }
         private static DateTime parseDate(string date, DateTime now) {
             string[] dateFragments = date.Split('-','/');
@@ -78,13 +80,13 @@ namespace Employees
             maximalPair.ProjectId = 0;
             maximalPair.DurationInDays = 0;
             foreach (int key in employeesByProject.Keys) {
-                Console.WriteLine("Current key is {0}", key);
+                //Console.WriteLine("Current key is {0}", key);
                 List<EntryRecord> currentList = employeesByProject.GetValueOrDefault<int, List<EntryRecord>>(key);
-                Console.WriteLine("Current list Count is {0}",currentList.Count);
+                //Console.WriteLine("Current list Count is {0}",currentList.Count);
                 for (int i=0;i<currentList.Count-1;i++ ) {
                     for (int j = i + 1; j < currentList.Count; j++) {
                         double duration = calculateDuration(currentList[i], currentList[j]);
-                        Console.WriteLine("Current duration = {0}", duration);
+                        //Console.WriteLine("Current duration = {0}", duration);
                         if ( i!=j && maximalPair.DurationInDays < duration) {
                             maximalPair.FirstEmployeeId = currentList[i].EmployeeId;
                             maximalPair.SecondEmployeeId = currentList[j].EmployeeId;
